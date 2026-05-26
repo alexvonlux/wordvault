@@ -154,17 +154,6 @@ The source text of *The Hobbit* is copyright © The Tolkien Estate. This project
 
 ---
 
-## License
-
-The **code** in this repository (Python scripts, HTML templates, CSS, JavaScript) is released under the [MIT License](LICENSE).
-
-**Why MIT?**  
-It is the most permissive and widely recognised open-source licence. It lets anyone use, copy, modify, and distribute the code with minimal restrictions, while keeping you free of liability. For a personal tool like this it is the standard sensible choice.
-
-> **Note:** The *content* (book sentences, translations) is **not** covered by the MIT licence. The Hobbit text remains the property of the Tolkien Estate. Do not redistribute this project with the encrypted dictionary in a way that could constitute commercial use of the copyrighted text.
-
----
-
 ## Author
 
 [alexvonlux](https://github.com/alexvonlux)
