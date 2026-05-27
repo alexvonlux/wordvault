@@ -1,0 +1,17 @@
+hobbit_vocabulary_russian.html
+hobbit_text.txt
+hobbit_vocabulary.html
+all_examples.json
+canonical_words.json
+translations.json
+translations_final.json
+vocab_data.json
+vocab_final.json
+all_words.txt
+not_found.txt
+ru_dict.py
+ru_dict2.py
+*.py
+__pycache__/
+encrypted/
+.DS_Store

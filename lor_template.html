@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html class="staticrypt-html">
+<head>
+  <meta charset="utf-8"/>
+  <title>/*[|template_title|]*/0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta http-equiv="cache-control" content="no-cache"/>
+  <meta http-equiv="expires" content="0"/>
+  <meta http-equiv="pragma" content="no-cache"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Cinzel:wght@400;600&display=swap');
+
+    :root {
+      --gold: #c9a227;
+      --gold-light: #f0c844;
+      --gold-dim: #7a5c10;
+      --bg-dark: #0d0a06;
+      --text: #e8d9b0;
+      --text-dim: #9a8060;
+      --border: #4a3010;
+      --glow: rgba(201,162,39,0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    .staticrypt-html, .staticrypt-body {
+      height: 100%; width: 100%;
+      overflow: hidden;
+    }
+
+    .staticrypt-body {
+      background: #0d0a06;
+      font-family: 'IM Fell English', Georgia, serif;
+      color: var(--text);
+      position: relative;
+    }
+
+    /* ── Full-screen background image ── */
+    .bg-image {
+      position: fixed; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── Dark overlay over image ── */
+    .bg-overlay {
+      position: fixed; inset: 0;
+      background: rgba(8, 5, 2, 0.52);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* ── Spinner ── */
+    #staticrypt_loading {
+      position: fixed; inset: 0; z-index: 20;
+      display: flex; align-items: center; justify-content: center;
+      background: #0d0a06;
+    }
+    .staticrypt-spinner {
+      width: 2.5rem; height: 2.5rem;
+      border: 3px solid var(--border);
+      border-right-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Content wrapper ── */
+    .staticrypt-content {
+      position: fixed; inset: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── Card ── */
+    .staticrypt-form {
+      width: 420px; max-width: 92vw;
+      background: linear-gradient(160deg, rgba(30,24,16,0.97) 0%, rgba(18,14,8,0.97) 100%);
+      border: 1px solid var(--border);
+      box-shadow: 0 0 80px rgba(0,0,0,0.9), 0 0 40px var(--glow), inset 0 1px 0 rgba(201,162,39,0.12);
+      padding: 2.8rem 2.5rem 2.5rem;
+      text-align: center;
+      position: relative;
+      backdrop-filter: blur(4px);
+    }
+
+    /* ── Ring ── */
+    .ring-container { margin: 0 auto 1.2rem; width: 72px; height: 72px; }
+    .ring-svg {
+      width: 72px; height: 72px;
+      animation: ring-glow 3s ease-in-out infinite;
+    }
+    @keyframes ring-glow {
+      0%, 100% { filter: drop-shadow(0 0 6px rgba(201,162,39,0.6)); }
+      50%       { filter: drop-shadow(0 0 20px rgba(240,200,68,1)); }
+    }
+
+    /* ── Title ── */
+    .staticrypt-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem; font-weight: 600;
+      color: var(--gold-light);
+      letter-spacing: 0.12em;
+      text-shadow: 0 0 20px var(--glow);
+    }
+    .staticrypt-instructions { margin-bottom: 0.2rem; }
+
+    /* ── Divider ── */
+    .staticrypt-hr {
+      border: none; border-top: 1px solid var(--border);
+      margin: 1.2rem 0; position: relative;
+    }
+    .staticrypt-hr::after {
+      content: '✦'; position: absolute;
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      background: rgba(18,14,8,0.97); color: var(--gold-dim);
+      padding: 0 8px; font-size: 0.7rem;
+    }
+
+    /* ── Input ── */
+    .staticrypt-password-container {
+      position: relative; background: #0d0a06;
+      border: 1px solid var(--border);
+      margin: 0 0 1rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .staticrypt-password-container:focus-within {
+      border-color: var(--gold-dim);
+      box-shadow: 0 0 14px rgba(201,162,39,0.25);
+    }
+    #staticrypt-password {
+      width: 100%; background: transparent; border: none; outline: none;
+      padding: 13px 40px 13px 14px;
+      font-size: 0.95rem;
+      font-family: 'IM Fell English', Georgia, serif;
+      color: var(--gold-light);
+      letter-spacing: 0.05em;
+    }
+    #staticrypt-password::placeholder { color: #9a7230; }
+    .staticrypt-toggle-password-visibility {
+      cursor: pointer; height: 18px; width: 18px; opacity: 0.4;
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      filter: invert(80%) sepia(40%) saturate(400%) hue-rotate(10deg);
+      transition: opacity 0.2s;
+    }
+    .staticrypt-toggle-password-visibility:hover { opacity: 0.8; }
+
+    /* ── Remember — always hidden ── */
+    #staticrypt-remember-label { display: none !important; }
+
+    /* ── Button ── */
+    .staticrypt-decrypt-button {
+      width: 100%; padding: 13px;
+      background: linear-gradient(135deg, #7a5010 0%, #c9a227 50%, #7a5010 100%);
+      background-size: 200% 100%;
+      border: 1px solid var(--gold-dim);
+      color: #1a1208;
+      font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 600;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      cursor: pointer;
+      transition: background-position 0.4s, box-shadow 0.3s;
+      box-shadow: 0 0 14px rgba(201,162,39,0.3);
+    }
+    .staticrypt-decrypt-button:hover {
+      background-position: 100% 0;
+      box-shadow: 0 0 30px rgba(201,162,39,0.7);
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body class="staticrypt-body">
+
+<!-- ── Full-screen background ── -->
+<img class="bg-image" src="https://alexvonlux.github.io/wordvault/images/bg.png" alt=""/>
+<div class="bg-overlay"></div>
+
+<div id="staticrypt_loading">
+  <div class="staticrypt-spinner"></div>
+</div>
+
+<div id="staticrypt_content" class="staticrypt-content hidden">
+  <div class="staticrypt-form">
+
+    <div class="ring-container">
+      <svg class="ring-svg" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="36" cy="36" r="28" stroke="#c9a227" stroke-width="3" fill="none"/>
+        <circle cx="36" cy="36" r="21" stroke="#7a5010" stroke-width="1.5" fill="none" stroke-dasharray="4 3"/>
+        <circle cx="36" cy="36" r="14" stroke="#c9a227" stroke-width="2" fill="#1a1208"/>
+      </svg>
+    </div>
+
+    <div class="staticrypt-instructions">
+      <p class="staticrypt-title">/*[|template_title|]*/0</p>
+    </div>
+
+    <hr class="staticrypt-hr"/>
+
+    <form id="staticrypt-form" action="#" method="post">
+      <div class="staticrypt-password-container">
+        <input id="staticrypt-password" type="password" name="password"
+               placeholder="/*[|template_placeholder|]*/0" autofocus/>
+        <img class="staticrypt-toggle-password-visibility"
+             alt="/*[|template_toggle_show|]*/0"
+             title="/*[|template_toggle_show|]*/0"
+             src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNTEyIj48cGF0aCBkPSJNMzguOCA1LjFDMjguNC0zLjEgMTMuMy0xLjIgNS4xIDkuMlMtMS4yIDM0LjcgOS4yIDQyLjlsNTkyIDQ2NGMxMC40IDguMiAyNS41IDYuMyAzMy43LTQuMXM2LjMtMjUuNS00LjEtMzMuN0w1MjUuNiAzODYuN2MzOS42LTQwLjYgNjYuNC04Ni4xIDc5LjktMTE4LjRjMy4zLTcuOSAzLjMtMTYuNyAwLTI0LjZjLTE0LjktMzUuNy00Ni4yLTg3LjctOTMtMTMxLjFDNDY1LjUgNjguOCA0MDAuOCAzMiAzMjAgMzJjLTY4LjIgMC0xMjUgMjYuMy0xNjkuMyA2MC44TDM4LjggNS4xek0yMjMuMSAxNDkuNUMyNDguNiAxMjYuMiAyODIuNyAxMTIgMzIwIDExMmM3OS41IDAgMTQ0IDY0LjUgMTQ0IDE0NGMwIDI0LjktNi4zIDQ4LjMtMTcuNCA2OC43TDQwOCAyOTQuNWM4LjQtMTkuMyAxMC42LTQxLjQgNC44LTYzLjNjLTExLjEtNDEuNS00Ny44LTY5LjQtODguNi03MS4xYy01LjgtLjItOS4yIDYuMS03LjQgMTEuN2MyLjEgNi40IDMuMyAxMy4yIDMuMyAyMC4zYzAgMTAuMi0yLjQgMTkuOC02LjYgMjguM2wtOTAuMy03MC44ek0zNzMgMzg5LjljLTE2LjQgNi41LTM0LjMgMTAuMS01MyAxMC4xYy03OS41IDAtMTQ0LTY0LjUtMTQ0LTE0NGMwLTYuOS41LTEzLjYgMS40LTIwLjJMODMuMSAxNjEuNUM2MC4zIDE5MS4yIDQ0IDIyMC44IDM0LjUgMjQzLjdjLTMuMyA3LjktMy4zIDE2LjcgMCAyNC42YzE0LjkgMzUuNyA0Ni4yIDg3LjcgOTMgMTMxLjFDMTc0LjUgNDQzLjIgMjM5LjIgNDgwIDMyMCA0ODBjNDcuOCAwIDg5LjktMTIuOSAxMjYuMi0zMi41TDM3MyAzODkuOXoiIGZpbGw9IndoaXRlIi8+PC9zdmc+"/>
+      </div>
+
+      <label id="staticrypt-remember-label" class="hidden">
+        <input id="staticrypt-remember" type="checkbox" name="remember"/>
+        /*[|template_remember|]*/0
+      </label>
+
+      <input type="submit" class="staticrypt-decrypt-button" value="/*[|template_button|]*/0"/>
+    </form>
+  </div>
+</div>
+
+<script>
+  const staticryptInitiator = /*[|js_staticrypt|]*/ 0;
+  const templateError = "/*[|template_error|]*/0",
+        templateToggleAltShow = "/*[|template_toggle_show|]*/0",
+        templateToggleAltHide = "/*[|template_toggle_hide|]*/0",
+        isRememberEnabled = /*[|is_remember_enabled|]*/ 0,
+        staticryptConfig = /*[|staticrypt_config|]*/ 0;
+
+  const templateConfig = {
+    rememberExpirationKey: "staticrypt_expiration",
+    rememberPassphraseKey: "staticrypt_passphrase",
+    replaceHtmlCallback: null,
+    clearLocalStorageCallback: null,
+  };
+
+  const staticrypt = staticryptInitiator.init(staticryptConfig, templateConfig);
+
+  window.onload = async function () {
+    const { isSuccessful } = await staticrypt.handleDecryptOnLoad();
+    if (!isSuccessful) {
+      document.getElementById("staticrypt_loading").classList.add("hidden");
+      document.getElementById("staticrypt_content").classList.remove("hidden");
+      document.getElementById("staticrypt-password").focus();
+    }
+  };
+
+  const toggleIcon = document.querySelector(".staticrypt-toggle-password-visibility");
+  const imgClosed = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNTEyIj48cGF0aCBkPSJNMzguOCA1LjFDMjguNC0zLjEgMTMuMy0xLjIgNS4xIDkuMlMtMS4yIDM0LjcgOS4yIDQyLjlsNTkyIDQ2NGMxMC40IDguMiAyNS41IDYuMyAzMy43LTQuMXM2LjMtMjUuNS00LjEtMzMuN0w1MjUuNiAzODYuN2MzOS42LTQwLjYgNjYuNC04Ni4xIDc5LjktMTE4LjRjMy4zLTcuOSAzLjMtMTYuNyAwLTI0LjZjLTE0LjktMzUuNy00Ni4yLTg3LjctOTMtMTMxLjFDNDY1LjUgNjguOCA0MDAuOCAzMiAzMjAgMzJjLTY4LjIgMC0xMjUgMjYuMy0xNjkuMyA2MC44TDM4LjggNS4xek0yMjMuMSAxNDkuNUMyNDguNiAxMjYuMiAyODIuNyAxMTIgMzIwIDExMmM3OS41IDAgMTQ0IDY0LjUgMTQ0IDE0NGMwIDI0LjktNi4zIDQ4LjMtMTcuNCA2OC43TDQwOCAyOTQuNWM4LjQtMTkuMyAxMC42LTQxLjQgNC44LTYzLjNjLTExLjEtNDEuNS00Ny44LTY5LjQtODguNi03MS4xYy01LjgtLjItOS4yIDYuMS03LjQgMTEuN2MyLjEgNi40IDMuMyAxMy4yIDMuMyAyMC4zYzAgMTAuMi0yLjQgMTkuOC02LjYgMjguM2wtOTAuMy03MC44ek0zNzMgMzg5LjljLTE2LjQgNi41LTM0LjMgMTAuMS01MyAxMC4xYy03OS41IDAtMTQ0LTY0LjUtMTQ0LTE0NGMwLTYuOS41LTEzLjYgMS40LTIwLjJMODMuMSAxNjEuNUM2MC4zIDE5MS4yIDQ0IDIyMC44IDM0LjUgMjQzLjdjLTMuMyA3LjktMy4zIDE2LjcgMCAyNC42YzE0LjkgMzUuNyA0Ni4yIDg3LjcgOTMgMTMxLjFDMTc0LjUgNDQzLjIgMjM5LjIgNDgwIDMyMCA0ODBjNDcuOCAwIDg5LjktMTIuOSAxMjYuMi0zMi41TDM3MyAzODkuOXoiIGZpbGw9IndoaXRlIi8+PC9zdmc+";
+  const imgOpen  = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NzYgNTEyIj48cGF0aCBkPSJNMjg4IDMyYy04MC44IDAtMTQ1LjUgMzYuOC0xOTIuNiA4MC42QzQ4LjYgMTU2IDE3LjMgMjA4IDIuNSAyNDMuN2MtMy4zIDcuOS0zLjMgMTYuNyAwIDI0LjZDMTcuMyAzMDQgNDguNiAzNTYgOTUuNCAzOTkuNEMxNDIuNSA0NDMuMiAyMDcuMiA0ODAgMjg4IDQ4MHMxNDUuNS0zNi44IDE5Mi42LTgwLjZjNDYuOC00My41IDc4LjEtOTUuNCA5My0xMzEuMWMzLjMtNy45IDMuMy0xNi43IDAtMjQuNmMtMTQuOS0zNS43LTQ2LjItODcuNy05My0xMzEuMUM0MzMuNSA2OC44IDM2OC44IDMyIDI4OCAzMnpNMTQ0IDI1NmExNDQgMTQ0IDAgMSAxIDI4OCAwIDE0NCAxNDQgMCAxIDEgLTI4OCAwem0xNDQtNjRjMCAzNS4zLTI4LjcgNjQtNjQgNjRjLTcuMSAwLTEzLjktMS4yLTIwLjMtMy4zYy01LjUtMS44LTExLjkgMS42LTExLjcgNy40Yy4zIDYuOSAxLjMgMTMuOCAzLjIgMjAuN2MxMy43IDUxLjIgNjYuNCA4MS42IDExNy42IDY3LjlzODEuNi02Ni40IDY3LjktMTE3LjZjLTExLjEtNDEuNS00Ny44LTY5LjQtODguNi03MS4xYy01LjgtLjItOS4yIDYuMS03LjQgMTEuN2MyLjEgNi40IDMuMyAxMy4yIDMuMyAyMC4zeiIgZmlsbD0id2hpdGUiLz48L3N2Zz4=";
+  toggleIcon.addEventListener("click", function () {
+    const p = document.getElementById("staticrypt-password");
+    if (p.type === "password") { p.type = "text";     toggleIcon.src = imgOpen;   toggleIcon.alt = templateToggleAltHide; }
+    else                       { p.type = "password"; toggleIcon.src = imgClosed; toggleIcon.alt = templateToggleAltShow; }
+  });
+
+  document.getElementById("staticrypt-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const password = document.getElementById("staticrypt-password").value;
+    const { isSuccessful } = await staticrypt.handleDecryptionOfPage(password, false);
+    if (!isSuccessful) { alert(templateError); }
+  });
+</script>
+</body>
+</html>
